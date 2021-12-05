@@ -91,7 +91,12 @@ country in ('Argentina','Bolivia','Brazil','Chile','Colombia','Ecuador','Paragua
 order by recovered desc;
 $ quit;
 ```
-
 ### 6.3.- Listar los primeros 10 países con mayor número de recuperados del mundo.
+```
+$ cd /home/osboxes/hive
+$ hive
+$ select country, max(recovered) from test.covid19 group by country order by max(recovered) desc limit 10;
+$ quit;
+```
 ### 6.4.- Cree una función, que ponga el porcentaje de pacientes recuperados/contagiados. Utilizarla en el caso 3 (Países de sudamerica).
 ### 6.5.- Haga una consulta, en el que se aprecie la cantidad de casos confirmados, que se han incrementado versus el día anterior, para Perú, en el rango del mes de Marzo.
