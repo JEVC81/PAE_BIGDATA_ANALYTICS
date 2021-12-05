@@ -60,10 +60,12 @@ $ show tables;
 $ quit;
 ```
 ## 5.- Carga de información en Base de Datos Test y Tabla Covid19
+```
 $ cd /home/osboxes/hive
 $ hive -e "LOAD DATA LOCAL INPATH '/home/osboxes/tareaHive01/covid19.csv' INTO TABLE test.covid19";
 $ hive -e "select count(1) from test.covid19;"
 $ hive -e "select * from test.covid19 where id < 10;"
+$ hive -e "select country, count(1) from test.covid19 group by country;"
 ```
 
 
