@@ -15,4 +15,4 @@ for country in countries[:]:
 
 df_all['date'] =  pd.to_datetime(df_all['date'] , infer_datetime_format=True)
 df_all[df_all['country']=="Peru"].sort_values('date', ascending=False).head(5)
-df_all.to_csv('covid19.csv')
+df_all.to_csv('/home/osboxes/tareaHive01/covid19.csv')
