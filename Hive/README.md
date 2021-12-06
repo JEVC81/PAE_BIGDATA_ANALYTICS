@@ -127,3 +127,13 @@ $ select country, recovered, confirmed, ' ' from test.covid19 where cdate = '202
 $ quit;
 ```
 ### 6.5.- Haga una consulta, en el que se aprecie la cantidad de casos confirmados, que se han incrementado versus el día anterior, para Perú, en el rango del mes de Marzo.
+
+SELECT
+	  day,
+	  hospital_name,
+	  number_of_patients,
+	  day - LAG(day) OVER (ORDER BY day) 
+                AS days_since_last_case
+FROM    hospital_statistics
+WHERE  illness_name = 'MDLR'
+ORDER BY day
