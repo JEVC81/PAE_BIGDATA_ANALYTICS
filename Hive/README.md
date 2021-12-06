@@ -80,7 +80,7 @@ where country='Colombia' and YEAR(cdate)=2021 and MONTH(cdate)=7;
 $ quit;
 ```
 ### 6.2.- Agrupar los países de Sudamerica, solo de la fecha del 16-Agosto, ordenados por recuperados.
-### 6.2.1.- Del año 2020, con data 
+#### 6.2.1.- Del año 2020, con data 
 ```
 $ cd /home/osboxes/hive
 $ hive
@@ -99,4 +99,31 @@ $ select country, max(recovered) from test.covid19 group by country order by max
 $ quit;
 ```
 ### 6.4.- Cree una función, que ponga el porcentaje de pacientes recuperados/contagiados. Utilizarla en el caso 3 (Países de sudamerica).
+#### 6.4.1.- Creación de función recuperados/contagiados
+```
+$ cd /home/osboxes/tareaHive01/python
+$ sudo nano recovered_confirmed.py 
+
+        #!/usr/bin/env python3
+        import hashlib
+        import sys
+
+        ## we are receiving each record passed in from Hive via standard input 
+        for line in sys.stdin:
+            line = line.strip()
+            (recovered,confirmed) = line.split('\t')
+            result = recovered/confirmed
+            sys.stdout.write(str(recovered)+'\t'+str(confirmed))
+
+$ sudo chmod +x /home/osboxes/tareaHive01/python/recovered_confirmed.py
+```
+#### 6.4.2.- Agrupación usando la función recuperados/contagiados
+```
+$ cd /home/osboxes/hive
+$ hive
+$ add file /home/osboxes/tareaHive01/python/recovered_confirmed.py;
+$ select transform(recovered,confirmed) using 'python3 recovered_confirmed.py' as recovered, confirmed from test.covid19 where cdate = '2020-08-16' and country in ('Argentina','Bolivia','Brazil') limit 5;
+$ select country, recovered, confirmed, ' ' from test.covid19 where cdate = '2020-08-16' and country in ('Argentina','Bolivia','Brazil') limit 10;
+$ quit;
+```
 ### 6.5.- Haga una consulta, en el que se aprecie la cantidad de casos confirmados, que se han incrementado versus el día anterior, para Perú, en el rango del mes de Marzo.
