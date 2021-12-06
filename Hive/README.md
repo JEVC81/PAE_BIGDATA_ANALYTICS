@@ -120,7 +120,8 @@ $ sudo nano recovered_confirmed.java
                 */
 
                 public float evaluate(int a, int b) { 
-                        return a/b; 
+                        float resultado = (float)a/b;
+                        return resultado; 
                 } 
         }
 
