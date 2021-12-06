@@ -8,9 +8,9 @@ public final class recovered_confirmed extends UDF {
 		if (s == null) { return null; }
 		return new Text(s.toString().replaceAll("^\"|\"$", ""));
 	}
-    */
+	*/
 
-    public float evaluate(int a, int b) { 
+	public float evaluate(int a, int b) { 
 		float resultado = (float)a/b;
 			return resultado; 
 		} 
