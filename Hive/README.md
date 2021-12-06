@@ -99,34 +99,41 @@ $ select country, max(recovered) from test.covid19 group by country order by max
 $ quit;
 ```
 ### 6.4.- Cree una función, que ponga el porcentaje de pacientes recuperados/contagiados. Utilizarla en el caso 3 (Países de sudamerica).
-#### 6.4.1.- Creación de función recuperados/contagiados
+#### 6.4.1.- Creación de función recuperados/contagiados - Java
 ```
-$ cd /home/osboxes/tareaHive01/python
-$ sudo nano recovered_confirmed.py 
+$ mkdir /home/osboxes/tareaHive01/java
+$ mkdir -p /home/osboxes/tareaHive01/java/com/pae/hive/udf 
 
-        #!/usr/bin/env python3
-        import hashlib
-        import sys
+$ cd /home/osboxes/tareaHive01/java/com/pae/hive/udf 
+$ sudo nano recovered_confirmed.java
 
-        ## we are receiving each record passed in from Hive via standard input 
-        for line in sys.stdin:
-            line = line.strip()
-            (recovered,confirmed) = line.split('\t')
-            result = recovered/confirmed
-            sys.stdout.write(str(recovered)+'\t'+str(confirmed))
+        package com.pae.hive.udf;
+        import org.apache.hadoop.hive.ql.exec.UDF;
+        import org.apache.hadoop.io.Text;
 
-https://docs.microsoft.com/en-us/azure/hdinsight/hadoop/python-udf-hdinsight
+        public final class recovered_confirmed extends UDF {
+                /*
+                public Text evaluate(final Text s) {
+                        if (s == null) { return null; }
+                        return new Text(s.toString().replaceAll("^\"|\"$", ""));
+                }
+                */
 
-$ sudo chmod +x /home/osboxes/tareaHive01/python/recovered_confirmed.py
-```
-#### 6.4.2.- Agrupación usando la función recuperados/contagiados
-```
+                public float evaluate(int a, int b) { 
+                        return a/b; 
+                } 
+        }
+
+$ cd /home/osboxes/tareaHive01/java
+$ sudo javac -classpath $HADOOP_HOME/share/hadoop/common/hadoop-common-3.1.2.jar:$HIVE_HOME/lib/hive-exec-3.1.2.jar com/pae/hive/udf/recovered_confirmed.java
+$ sudo jar cf /home/osboxes/tareaHive01/java/rc.jar com/pae/hive/udf/recovered_confirmed.class
+
 $ cd /home/osboxes/hive
 $ hive
-$ add file /home/osboxes/tareaHive01/python/recovered_confirmed.py;
-$ select transform(recovered,confirmed) using 'python3 recovered_confirmed.py' as recovered, confirmed from test.covid19 where cdate = '2020-08-16' and country in ('Argentina','Bolivia','Brazil') limit 5;
-$ select country, recovered, confirmed, ' ' from test.covid19 where cdate = '2020-08-16' and country in ('Argentina','Bolivia','Brazil') limit 10;
-$ quit;
+$ add jar /home/osboxes/tareaHive01/java/rc.jar;
+$ create temporary function recovered_confirmed as 'com.pae.hive.udf.recovered_confirmed';
+
+$ select recovered_confirmed(recovered,confirmed), recovered/confirmed, cdate, confirmed, recovered, country from test.covid19 where cdate = '2020-08-16' and country in ('Argentina','Bolivia','Brazil') limit 5;
 ```
 ### 6.5.- Haga una consulta, en el que se aprecie la cantidad de casos confirmados, que se han incrementado versus el día anterior, para Perú, en el rango del mes de Marzo.
 ```
