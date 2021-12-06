@@ -115,6 +115,8 @@ $ sudo nano recovered_confirmed.py
             result = recovered/confirmed
             sys.stdout.write(str(recovered)+'\t'+str(confirmed))
 
+https://docs.microsoft.com/en-us/azure/hdinsight/hadoop/python-udf-hdinsight
+
 $ sudo chmod +x /home/osboxes/tareaHive01/python/recovered_confirmed.py
 ```
 #### 6.4.2.- Agrupación usando la función recuperados/contagiados
