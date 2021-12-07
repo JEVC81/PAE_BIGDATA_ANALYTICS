@@ -135,10 +135,14 @@ $ add jar /home/osboxes/tareaHive01/java/rc.jar;
 $ create temporary function recovered_confirmed as 'com.pae.hive.udf.recovered_confirmed';
 
 $ select recovered_confirmed(recovered,confirmed), recovered/confirmed, cdate, confirmed, recovered, country from test.covid19 where cdate = '2020-08-16' and country in ('Argentina','Bolivia','Brazil') limit 5;
+
+$ quit;
 ```
 ### 6.5.- Haga una consulta, en el que se aprecie la cantidad de casos confirmados, que se han incrementado versus el día anterior, para Perú, en el rango del mes de Marzo.
 ```
 $ cd /home/osboxes/hive
 $ hive
 $ select cdate, confirmed, confirmed - LAG(confirmed) OVER (ORDER BY cdate asc) as confirmed_since_last_date from test.covid19 where YEAR(cdate)=2021 and MONTH(cdate)=3 and country='Peru' order by cdate desc;
+
+$ quit;
 ```
